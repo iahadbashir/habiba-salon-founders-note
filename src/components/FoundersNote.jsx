@@ -98,8 +98,8 @@ export default function FoundersNote({ isOpen, onClose, signatureSrc }) {
       {isOpen && (
         /* ── Backdrop ──────────────────────────────────────── */
         <motion.div
-          className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center
-                     bg-black/50 backdrop-blur-sm p-4 sm:p-8"
+          className="modal-backdrop fixed inset-0 z-50 overflow-y-auto
+                     bg-black/50 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -109,6 +109,9 @@ export default function FoundersNote({ isOpen, onClose, signatureSrc }) {
           role="dialog"
           aria-labelledby="founders-note-heading"
         >
+          {/* ── Centering wrapper — lets card scroll on short viewports ── */}
+          <div className="min-h-full flex items-center justify-center p-4 sm:p-8">
+
           {/* ── Card — stops propagation so click inside doesn't close ── */}
           <motion.div
             ref={printRef}
@@ -235,6 +238,7 @@ export default function FoundersNote({ isOpen, onClose, signatureSrc }) {
             {/* ── Gold bottom bar ─────────────────────────────── */}
             <div className="h-1.5 w-full bg-gradient-to-r from-gold-600 via-gold-400 to-gold-600" />
           </motion.div>
+          </div>{/* end centering wrapper */}
         </motion.div>
       )}
     </AnimatePresence>
