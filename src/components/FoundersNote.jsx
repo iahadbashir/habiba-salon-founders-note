@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 /* ── Gold ornament divider ─────────────────────────────────── */
@@ -57,7 +57,41 @@ const SignaturePlaceholder = ({ src }) =>
      signatureSrc string   — optional URL for signature image
 ═══════════════════════════════════════════════════════════════ */
 export default function FoundersNote({ isOpen, onClose, signatureSrc }) {
-  const handlePrint = () => window.print()
+  const printRef = useRef(null)
+
+  const handlePrint = () => {
+    const card = printRef.current
+    if (!card) return
+
+    const printWindow = window.open('', '_blank', 'width=900,height=700')
+    // collect all <link rel="stylesheet"> and <style> tags from the parent page
+    const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+      .map((el) => el.outerHTML)
+      .join('\n')
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Founder's Note — Habiba Salon</title>
+          ${styles}
+          <style>
+            body { margin: 0; padding: 0; background: white; }
+            .print\\:hidden { display: none !important; }
+          </style>
+        </head>
+        <body>${card.outerHTML}</body>
+      </html>
+    `)
+    printWindow.document.close()
+    printWindow.focus()
+    // slight delay to let fonts/styles load before printing
+    setTimeout(() => {
+      printWindow.print()
+      printWindow.close()
+    }, 400)
+  }
 
   return (
     <AnimatePresence>
@@ -77,6 +111,7 @@ export default function FoundersNote({ isOpen, onClose, signatureSrc }) {
         >
           {/* ── Card — stops propagation so click inside doesn't close ── */}
           <motion.div
+            ref={printRef}
             className="modal-card relative w-full max-w-2xl rounded-2xl overflow-hidden
                        shadow-[0_32px_80px_rgba(0,0,0,0.28)]"
             style={{ background: '#FFFDF5' }}

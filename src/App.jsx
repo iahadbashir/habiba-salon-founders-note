@@ -6,7 +6,7 @@ export default function App() {
 
   return (
     <main
-      className="min-h-screen flex flex-col items-center justify-center gap-6 p-8"
+      className="landing-page min-h-screen flex flex-col items-center justify-center gap-6 p-8"
       style={{ background: '#F5F0E5' }}
     >
       {/* Demo trigger */}
